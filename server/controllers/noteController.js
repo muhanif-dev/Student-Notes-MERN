@@ -120,6 +120,33 @@ const updateNote = async (req, res) => {
     }
 }
 
+const deleteNote = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const deletedNote = await Note.findByIdAndDelete(id);
+
+        if(!deletedNote) {
+            return res.status(404).json({
+                success:false,
+                message:"Invalid note id"
+            })
+        }
+
+        res.status(200).json({
+            success:true,
+            message:"Note Deleted Successfully",
+            data:deletedNote,
+        })
+    } catch (error) {
+        req.status(500).json({
+            success:false,
+            message:error.message,
+        });
+    }
+    
+
+}
+
 
 
 module.exports = {
@@ -127,5 +154,6 @@ module.exports = {
     getAllNotes,
     getOneNote,
     updateNote,
+    deleteNote
     
 }
