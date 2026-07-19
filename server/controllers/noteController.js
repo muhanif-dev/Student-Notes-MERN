@@ -87,9 +87,45 @@ const getOneNote = async (req, res) => {
     }
 }
 
+const updateNote = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const updatedNote = await Note.findByIdAndUpdate(
+            id,
+            req.body,
+             {
+                new: true,
+                runValidators: true,
+            }
+        );
+
+        if(!updatedNote) {
+            return res.status(404).json({
+                success: false,
+                message:"Note Not Found",
+            });
+        }
+
+        res.status(200).json({
+            success:true,
+            data:updatedNote,
+            message:"Note Updated Successfully",
+        })
+        
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            message:error.message,
+        })
+    }
+}
+
+
 
 module.exports = {
     createNote,
     getAllNotes,
     getOneNote,
+    updateNote,
+    
 }
