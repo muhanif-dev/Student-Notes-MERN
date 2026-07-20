@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllNotes } from "./services/noteService";
+import { getAllNotes, createNote } from "./services/noteService";
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -33,12 +33,22 @@ function App() {
     })
   }
 
+ const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+        const response = await createNote(formData);
+        console.log(`Response: ${response}`);
+    } catch (error) {
+        console.log(`Error: ${error}`);
+    }
+};
+
 return (
     <div>
         <h1>Student Notes</h1>
 
 
-             <form>
+            <form onSubmit={handleSubmit}>
 
             <input
                 type="text"
