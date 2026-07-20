@@ -5,6 +5,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const noteRoutes = require("./routes/noteRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 //This loads the values from .env into process.env.
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(cors());//Tells Express: "Allow requests from other origins (like the Re
 app.use(express.json());
 
 app.use("/api", noteRoutes);
+app.use("/api/auth", authRoutes);
 
 app.listen(PORT, console.log("SERVER IS RUNNING ON PORT:"+ PORT));
 
