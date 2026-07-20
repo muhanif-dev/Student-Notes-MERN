@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllNotes, createNote } from "./services/noteService";
+import { getAllNotes, createNote, deleteNote } from "./services/noteService";
 
 function App() {
   const [notes, setNotes] = useState([]);
@@ -25,6 +25,8 @@ function App() {
     fetchNotes();
   }, []);
 
+  //Change ko handle karta hai.
+
   const handleChange = (e) => {
     const { name, value} = e.target;
     setFormData({
@@ -33,6 +35,7 @@ function App() {
     })
   }
 
+//Submit ko handle karta hai.
  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -49,12 +52,20 @@ function App() {
     }
 };
 
+//Delete ko handle karta hai.
+const handleDelete = async (id) => {
+    try {
+        await deleteNote(id);
+        await fetchNotes();
+    } catch (error) {
+        console.error(`Error: ${error}`);
+    }
+}
+
 return (
     <div>
         <h1>Student Notes</h1>
-
-
-            <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
 
             <input
                 type="text"
@@ -99,19 +110,18 @@ return (
                 Create Note
             </button>
 
-        </form>
-
-
-
+         </form>
 
         {notes.map((note) => (
             <div key={note._id}>
                 <h2>{note.title}</h2>
                 <p>Subject: {note.subject}</p>
                 <p>Semester: {note.semester}</p>
+                <button onClick={() => handleDelete(note._id)}>Delete</button>
                 <hr />
             </div>
         ))}
+    
     </div>
 );
 }
