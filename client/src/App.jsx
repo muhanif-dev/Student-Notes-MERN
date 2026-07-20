@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { getAllNotes, createNote, deleteNote } from "./services/noteService";
+import { getAllNotes, createNote, deleteNote, updateNote } from "./services/noteService";
 
 function App() {
   const [notes, setNotes] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+
   const [formData, setFormData] = useState({
     title:"",
     subject:"",
@@ -39,14 +41,22 @@ function App() {
  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-         await createNote(formData);
-        fetchNotes();
-         setFormData({
-            title: "",
-            subject: "",
-            semester: "",
-            description: ""
-        });
+        if(editingId){
+            await updateNote(editingId, formData);
+        } else {
+            await createNote(formData);
+        }
+
+         fetchNotes();
+                    setFormData({
+                    title: "",
+                    subject: "",
+                    semester: "",
+                    description: ""
+                });
+
+                setEditingId(null);
+         
     } catch (error) {
         console.error(`Error: ${error}`);
     }
@@ -60,6 +70,16 @@ const handleDelete = async (id) => {
     } catch (error) {
         console.error(`Error: ${error}`);
     }
+}
+
+const handleEdit = async (note) => {
+    setFormData({
+        title:note.title,
+        subject: note.subject,
+        semester: note.semester,
+        description: note.description,
+    });
+    setEditingId(note._id);
 }
 
 return (
@@ -107,7 +127,7 @@ return (
             <br /><br />
 
             <button type="submit">
-                Create Note
+                {editingId ? "Update Note": "Create Note"}
             </button>
 
          </form>
@@ -117,6 +137,7 @@ return (
                 <h2>{note.title}</h2>
                 <p>Subject: {note.subject}</p>
                 <p>Semester: {note.semester}</p>
+                <button onClick={() => {handleEdit(note)}}>edit</button> <span></span>
                 <button onClick={() => handleDelete(note._id)}>Delete</button>
                 <hr />
             </div>
