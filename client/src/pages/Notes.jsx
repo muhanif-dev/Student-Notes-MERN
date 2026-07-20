@@ -1,34 +1,38 @@
 import { useEffect, useState } from "react";
-import { getAllNotes } from "./services/noteService";
+import { getAllNotes } from "../services/noteService";
 
-function App() {
+const Notes = () => {
 
     const [notes, setNotes] = useState([]);
 
+    useEffect(() => {
+
+        fetchNotes();
+
+    }, []);
+
     const fetchNotes = async () => {
+
         try {
 
             const response = await getAllNotes();
-
-            console.log(response);
+            console.log(response.data);
 
             setNotes(response.data);
 
         } catch (error) {
-            console.error(error);
-        }
-    };
 
-    useEffect(() => {
-        fetchNotes();
-    }, []);
+            console.log(error);
+
+        }
+
+    };
 
     return (
         <div>
             <h1>Student Notes</h1>
         </div>
     );
+};
 
-}
-
-export default App;
+export default Notes;
