@@ -36,10 +36,16 @@ function App() {
  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const response = await createNote(formData);
-        console.log(`Response: ${response}`);
+         await createNote(formData);
+        fetchNotes();
+         setFormData({
+            title: "",
+            subject: "",
+            semester: "",
+            description: ""
+        });
     } catch (error) {
-        console.log(`Error: ${error}`);
+        console.error(`Error: ${error}`);
     }
 };
 
